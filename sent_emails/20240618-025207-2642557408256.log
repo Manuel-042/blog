@@ -1,0 +1,46 @@
+Content-Type: multipart/alternative;
+boundary="===============4703701190223036100=="
+MIME-Version: 1.0
+Subject: Divvy Password Reset
+From: webmaster@localhost
+To: admin@test.com
+Date: Tue, 18 Jun 2024 09:52:07 -0000
+Message-ID: <171870432786.28100.11301435860046474529@DESKTOP-4T3JGR5>
+
+--===============4703701190223036100==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+<p>Hi admin,</p>
+<p>To initiate the password reset process for your  Divvy Account, click the link below:</p>
+
+<a href="http://127.0.0.1:8000/blog/reset/MQ/c8sqmv-a69d6f85747e2c1b33e575c6c4f2eca2/">Reset Password</a>
+
+<p> If clicking the link above doesn't work, please copy and paste the URL in a new browser window instead.</p>
+
+<p>If you didn't request a password reset, please ignore this email.</p>
+
+<p>Yours Sincerely,</p>
+<p>The Developer</p>
+
+--===============4703701190223036100==
+Content-Type: text/html; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+
+<p>Hi admin,</p>
+<p>To initiate the password reset process for your  Divvy Account, click the link below:</p>
+
+<a href="http://127.0.0.1:8000/blog/reset/MQ/c8sqmv-a69d6f85747e2c1b33e575c6c4f2eca2/">Reset Password</a>
+
+<p> If clicking the link above doesn't work, please copy and paste the URL in a new browser window instead.</p>
+
+<p>If you didn't request a password reset, please ignore this email.</p>
+
+<p>Yours Sincerely,</p>
+<p>The Developer</p>
+
+--===============4703701190223036100==--
+
+-------------------------------------------------------------------------------

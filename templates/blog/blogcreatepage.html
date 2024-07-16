@@ -1,0 +1,72 @@
+{% extends 'blog/index.html' %}
+
+{% load static %}
+
+{% block title%}Write{% endblock %}
+
+{% block content %}
+    <body>
+        <div class="blogcontainersmall">
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div id="toast" class="d-none" data-message-tag={{message.tags}}>{{message}}</div>
+                {% endfor %}
+            {% endif %}
+
+            {% if error %}
+                <p>{{ error }}</p>
+            {% endif %}
+            <form  method="post" autocomplete="off" name="form" enctype="multipart/form-data">
+
+                {% csrf_token %}
+                {{form.media}}
+
+                <div class="d-flex justify-content-between align-items-center mt-5 mb-1">
+                    <div class="d-flex justify-content-between align-items-center gap-1">
+                        <button type="button" class="btn btn-cover d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-image"></i>
+                            Add Cover
+                        </button>
+                        <button type="button" class="btn btn-subtitle d-flex align-items-center gap-2">
+                            <i class="fa-solid fa-lines-leaning"></i>
+                            Add Subtitle
+                        </button>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-publish d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-paper-plane"></i>
+                        Publish
+                    </button>
+                </div>
+                
+                <div class="row">
+                    <div class="display">
+                        <label for="id_image" class="image-label">
+                            <img src="{% static 'images/image-gallery.png' %}" alt="add image" class="image-icon"/>
+                            <p><b>Click here to upload image</b></p>
+                            <span>Supports JPG, JPEG, PNG<span>
+                            
+                        </label>
+                        {{ form.image }}
+                    </div>
+                    <img src="#" alt="Preview Uploaded Image" id="file-preview">
+
+                    <div class="mt-3 title">
+                        {{ form.title }}
+                    </div>
+                    <div class="mb-4 displaysub">
+                        {{ form.description }}
+                        {% comment %} <span class="helptext" id="description">The description field can only contain 100 characters. All we need is a hook!</span> {% endcomment %}
+                        {% comment %} <i class="fa-solid fa-xmark cancel fa-lg"></i> {% endcomment %}
+                    </div>
+                    <div class="mb-4 category">
+                        Category: {{ form.category }}
+                    </div> 
+                    <div class="postbody">
+                        {{ form.blogpost }}
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+{% endblock %}

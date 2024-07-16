@@ -1,0 +1,71 @@
+{% extends 'blog/index.html' %}
+
+{% load static %}
+{% load cloudinary %}
+
+{% block title %}BlogList{% endblock %}
+
+{% block content %}
+    <span>{{ blog.created_at|date:'M d, Y' }}</span>
+    <div class="cardbody">
+        {% if user.is_authenticated %}
+        <div class="blogcontainer">
+            <div class="tags-div">
+                <button class="tags-btn active py-2 px-3 d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    Personalized
+                </button>
+                <button class="tags-btn py-2 px-3 d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-users"></i>
+                    Following
+                </button>
+                <button class="tags-btn py-2 px-3 d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-award"></i>
+                    Featured
+                </button>
+            </div>
+            <div>
+                {% for blog in blogs %}
+                <div class="postDiv">
+                    <div class="d-flex align-items-center justify-content-start mb-3 gap-2 post-header">
+                        <img src="{% static 'images/blank-profile-picture.webp' %}" alt="profile picture" class="post-profile-img"/>
+                        <a href="#" class="author d-flex align-items-center justify-content-center" style="gap: 0.5rem">{{ blog.author.username|capfirst }}</a>
+
+                        <div class="profileContainer d-none">
+                            <div class="d-flex align-items-end justify-content-between profile-container-header">
+                                <img src="{% static 'images/blank-profile-picture.webp' %}" alt="profile picture" class="post-profile-img profile-container-img"/>
+                                <button class="btn btn-dark" id="followBtn">Follow</button>
+                            </div>
+                            <div class="profile-container-body">
+                                <p><a>{{ blog.author.username|capfirst }}</a></p>
+                                <p>0 followers</p>
+                                <p>Nothing to see here</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="d-flex align-items-center justify-content-between postinnerdiv mb-3">
+                        <div class="align-self-start postbody">
+                            <a href="{% url 'blogdetail' blog.id %}" class="card-title-link">{{ blog.title }}</a>
+                            <p class="card-subtitle my-2 text-muted subtitle">{{ blog.description }}</p>
+                        </div>
+                        <div class="imgContainer">
+                            <img src="https://res.cloudinary.com/diq51knlu/{{ blog.image }}" class="card-img-top" alt="...">
+                        </div>
+                    </div>
+                    <div class="actions-div d-flex align-items-center">
+                        <p>{{ blog.created_at|date:'M j' }}</p>
+                        <span class="icon" id=""><i class="fa-heart {% if blog.user_has_liked %}fa-solid{% else %}fa-regular{% endif %}" style="color: {% if blog.user_has_liked %}red{% else %}inherit{% endif %};"></i> <span>{{ blog.likes_count }}</span></span>
+                        <span class="icon"><i class="fa-regular fa-comment-dots"></i> <span>{{ blog.comment_count }}</span></span>
+                        <span class="icon bookmark"><i class="fa-regular fa-bookmark"></i></span>
+                    </div> 
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% else %}
+            <p>You are not logged in</p>
+            <a class="btn btn-primary nav-btn px-2" href="{% url 'login' %}">Log In</a>
+        {% endif %}
+    </div>
+{% endblock %}

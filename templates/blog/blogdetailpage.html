@@ -1,0 +1,349 @@
+{% extends 'blog/index.html' %}
+
+{% load static %}
+{% load cloudinary %}
+
+{% block title %}BlogDetail{% endblock %}
+
+{% block content %}
+    <div class="details-body">
+        {% if messages %}
+            {% for message in messages %}
+                <div id="toast" class="d-none" data-message-tag={{message.tags}}>{{message}}</div>
+            {% endfor %}
+        {% endif %}
+        
+        
+        
+        <div class="blogcontainersmall">
+            <div class="image-grid-cover">
+                {% if blog.image %}
+                    <img src="https://res.cloudinary.com/diq51knlu/{{ blog.image }}">
+                {% else %}
+                    {% comment %} DO NOTHING {% endcomment %}
+                {% endif %}
+            </div>
+
+            <div class="my-5">
+                <div class="n">
+                    
+                    <h1 class="mb-3">{{ blog.title }}</h1>
+                    <h6 class="mb-3">{{ blog.description }}</h6>
+
+                    <div class="d-flex align-items-center justify-content-start gap-3 mb-3 border-bottom pb-3">
+                        <div class="d-flex align-items-center justify-content-center gap-2">
+                            <img src="{% static 'images/blank-profile-picture.webp' %}" class="profileimage" alt="no picture"/>
+                            <p class="m-0">{{blog.author}}</p>
+                        </div>
+                        <span>.</span>
+                        <p class="m-0 d-flex align-items-center gap-2">
+                            <i class="fa-regular fa-calendar-check"></i>
+                            {{ blog.created_at|date:"M d, Y" }}
+                        </p>
+                        <span>.</span>
+                        <p class="m-0 d-flex align-items-center gap-2">
+                            <i class="fa-regular fa-clock"></i>
+                            {{ blog.reading_duration }}
+                            
+                            {% if blog_post.reading_duration > 1 %}
+                                mins
+                            {% else %}
+                                min
+                            {% endif %}
+                            read
+                        </p>
+                    </div>
+
+                
+                    {% comment %} <div class="mt-5 blogpost">{{ blog.blogpost | safe }}</div> {% endcomment %}
+
+                    <p id="post-body"></p>
+
+                    <p class="tags">{{ blog.category.category_name }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="blog-actions">
+            <div class="d-flex align-items-center justify-content-center icon-flex">
+                <div class='icon-heart icon-container'>
+                    <i class="fa-heart icon {% if user_has_liked %}fa-solid{% else %}fa-regular{% endif %}"  data-blogid={{ blog.id }} data-csrftoken={{csrf_token}} style="color: {% if user_has_liked %}red{% else %}inherit{% endif %};"></i>
+                </div>
+                <span class="fw-bold" id="likes">{{likes_count}}</span>
+            </div>
+
+            <div class="d-flex align-items-center justify-content-center icon-flex">
+                <div class='icon-comments icon-container d-flex align-items-center'>
+                    <i class="fa-regular fa-comment-dots icon"></i>
+                </div>
+                <span class="fw-bold comments">{{comment_count}}</span>
+            </div>
+
+            <div class='icon-bookmark icon-container'>
+                <i class="fa-regular fa-bookmark icon"></i>
+            </div>
+            <div class='icon-share icon-container'>
+                <i class="fa-solid fa-share"></i>
+            </div>
+            <div class='icon-more icon-container'>
+                <i class="fa-solid fa-ellipsis-vertical"></i>
+            </div>
+        </div>
+
+        <section class="comment-section">
+            <div class="comment-backdrop"></div>
+            <div class="comment-main">
+                <div class="comment-header">
+                    <h5>Comments(<span class="comments">13</span>)</h5>
+                    <i class="fa-solid fa-xmark fa-xl comment-close-icon"></i>
+                </div>
+                <div class="comment-form">
+                    <div class="d-flex align-items-center justify-content-start" style="gap: 0.6rem;">
+                        <img src="{% static 'images/blank-profile-picture.webp' %}" alt="profile picture" class="post-profile-img"/>
+                        <p class="post-author">{{ user.get_username|capfirst }}</p>
+                    </div>
+                    <form autocomplete="off" id="form" name="form">
+                        {% csrf_token %}
+                        <textarea id="comments" name="comments" placeholder="Write a thoughtful comment" data-blogid={{blog.id}} data-csrftoken={{csrf_token}}></textarea>
+                        <button type="button" class="btn btn-dark" id="commentBtn">Comment</button>
+                    </form>
+                </div>
+                <div class="comment-body">
+
+                    {% if not comments %}
+                        <div class="" id="comments-empty">
+                            <h5>No comments yet!</h5>
+                            <p>Write the first comment</p>
+                        </div>
+                    {% else %}
+
+                        {% for comment in comments %}
+                            <div class="post-comment">
+                                <div class="post-user d-flex align-items-center justify-content-start" style="gap: 0.6rem;">
+                                    <img src="{% static 'images/blank-profile-picture.webp' %}" alt="profile picture" class="post-profile-img post-comment--user-img"/>
+                                    <div class="post-comment-user">
+                                        <p class="post-user--username">{{comment.author.username}}</p>
+                                        <p class="comment-date">{{comment.created_at}}</P>
+                                    </div>
+                                </div>
+        
+                                <div class="post-main">
+                                    {{comment.comment}}
+                                </div>
+        
+                                <div class="post-actions d-flex align-items-center justify-content-start" style="gap: 0.7rem;">
+                                    <div class="d-flex align-items-center justify-content-start" style="gap: 0.7rem;">
+                                        <div class="comment-like-icon">
+                                            {% for info in comment_info %}
+                                                {% if forloop.parentloop.counter0 == forloop.counter0 %}
+                                                    <i class="fa-heart icon {% if info.user_has_liked_comment %}fa-solid{% else %}fa-regular{% endif %}" style="color:{% if info.user_has_liked_comment %}red{% else %}inherit{% endif %};" data-commentid="{{ comment.id }}" data-blogid="{{ blog.id }}" data-csrftoken="{{ csrf_token }}"></i>
+                                                    <span class="comment-like-count">{{ info.total_comment_likes }}</span>
+                                                {% endif %}
+                                            {% endfor %}
+                                            
+                                        </div>
+                                        {% if comment.replies.exists %}
+                                            <div>
+                                                <i class="fa-regular fa-comment-dots icon"></i>
+                                                <span>{{comment.replies.count}}</span>
+                                            </div>
+                                            <button type="button" class="show-replies">Show Replies</button>
+                                        {% endif %}
+                                    </div>
+                                    <button type="button" class="reply-link" id="reply-link">Reply</button>
+                                </div>
+        
+                                
+                                <div class="reply-comment-form d-none" id="reply-comment-form">
+                                    <span class="vline"></span>
+                                    <div class="post-user d-flex align-items-center justify-content-start" style="gap: 0.6rem;">
+                                        <img src="{% static 'images/blank-profile-picture.webp' %}" alt="profile picture" class="post-profile-img"/>
+                                        <p class="post-reply-user--username">{{ user.get_username }}</p>
+                                    </div>
+                                    <form method="post" autocomplete="off" name="form" style="text-align: left;">
+                                        {% csrf_token %}
+                                        <textarea id="replies" name="replies" placeholder="Write a Reply" data-blogid={{blog.id}} data-csrftoken={{csrf_token}} data-parentid={{comment.id}}></textarea>
+                                        <div class="d-flex align-items-center justify-content-start" style="gap: 0.5rem;">
+                                            <button type="button" class="btn btn-outline-dark" id="cancelBtn">Cancel</button>
+                                            <button type="button" class="btn btn-dark" id="replyBtn">Reply</button>
+                                        </div>
+                                    </form>
+                                </div>
+        
+                                <div class="reply-comment d-none" id="reply-comment">
+                                    {% if comment.replies.exists %}
+                                        <span class="vline"></span>
+                                        {% for replies in comment.replies.all %}
+                                            <div class="replies-text">
+                                                <div class="post-user d-flex align-items-center justify-content-start" style="gap: 0.6rem;">
+                                                    <img src="{% static 'images/blank-profile-picture.webp' %}" alt="profile picture" class="post-profile-img post-comment--user-img"/>
+                                                    <div class="post-comment-user">
+                                                        <p class="post-user--username">{{replies.author.username}}</p>
+                                                        <p class="comment-date">{{replies.created_at}}</P>
+                                                    </div>
+                                                </div>
+                        
+                                                <div class="post-main">
+                                                    {{ replies.comment }} 
+                                                </div>
+                        
+                                                <div class="post-actions d-flex align-items-center justify-content-start" style="gap: 0.7rem;">
+                                                    <div class="d-flex align-items-center justify-content-start" style="gap: 0.7rem;">
+                                                        <div>
+                                                            <i class="fa-regular fa-heart icon"></i>
+                                                            <span>0</span>
+                                                        </div>
+                                                        {% if replies.comment.exists %}
+                                                            <div class="comments-icon">
+                                                                <i class="fa-regular fa-comment-dots icon"></i>
+                                                                <span>1</span>
+                                                            </div>
+                                                            <button type="button" class="reply-link">Hide Replies</button>
+                                                        {% endif %}
+                                                    </div>
+                                                    <button type="button" class="reply-link">Reply</button>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                </div>
+            </div>
+        </section>
+
+        {% comment %} <button class="btn btn-primary" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasExample" aria-controls="offcanvasExample">
+        Button with data-bs-target
+        </button> {% endcomment %}
+        
+        {% comment %} <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasExampleLabel">Offcanvas</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+            <div>
+            Some text as placeholder. In real life you can have the elements you have chosen. Like, text, images, lists, etc.
+            </div>
+            <div class="dropdown mt-3">
+            <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+                Dropdown button
+            </button>
+            <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="#">Action</a></li>
+                <li><a class="dropdown-item" href="#">Another action</a></li>
+                <li><a class="dropdown-item" href="#">Something else here</a></li>
+            </ul>
+            </div>
+        </div>
+        </div> {% endcomment %}
+
+        <script>
+            window.addEventListener('DOMContentLoaded', () => {
+                const postBody = document.getElementById('post-body');
+                let body = JSON.parse("{{blog.blogpost|escapejs}}")
+                let blocks = body.blocks
+
+                for (let index = 0; index < blocks.length; index++) {
+                    switch(blocks[index].type) {
+                        case "Header":
+                            let head = document.createElement(`h${blocks[index].data.level}`)
+                            head.textContent = blocks[index].data.text
+                            postBody.appendChild(head);
+                            break;
+                        case "Image":
+                            let div = document.createElement('div');
+                            let image = document.createElement('img');
+                            let caption = document.createElement('h6');
+                            image.src = `${blocks[index].data.file.url}`;
+                            image.style.width = "100%";
+                            caption.textContent = blocks[index].data.caption;
+                            caption.style.textAlign = "center"
+                            div.appendChild(image);
+                            div.appendChild(caption);
+                            postBody.appendChild(div);
+                            break;
+                        case "List":
+                            let list;
+                            if (blocks[index].data.style === 'unordered') {
+                                list = document.createElement('ul');
+                            } else {
+                                list = document.createElement('ol');
+                            }
+                            for (const item in blocks[index].data.items) {
+                                let li = document.createElement('li')
+                                li.textContent = blocks[index].data.items[item]
+                                list.appendChild(li);       
+                            }
+                            postBody.appendChild(list);
+                            break;
+                        case "Raw":
+                            let blockquote = document.createElement("blockquote");
+                            let code = document.createElement("code");
+                            let pre = document.createElement("pre");
+                            pre.textContent = blocks[index].data.html;
+                            pre.style.background = "#131313";
+                            pre.style.color = "#dddddd";
+                            pre.style.padding = "15px";
+                            code.appendChild(pre);
+                            postBody.appendChild(code);
+                            break;
+                        case "Attaches":
+                            let parent = document.createElement("div");
+                            let a = document.createElement("a");
+                            let name = document.createElement("h3");
+                            let size = document.createElement("h3");
+                            a.href = `${blocks[index].data.file.name}`;
+                            a.textContent = `Download ${blocks[index].data.file.extension}`;
+                            name.textContent = blocks[index].data.file.name;
+                            size.textContent = blocks[index].data.file.size;
+                            parent.innerHTML = `<a href="${blocks[index].data.file.url}" download>Download</a>`;
+                            parent.appendChild(a);
+                            parent.appendChild(name);
+                            parent.appendChild(size);
+                            postBody.appendChild(parent);
+                            break;
+                        case "paragraph":
+                            const p = document.createElement("p");
+                            p.innerHTML = blocks[index].data.text;
+                            postBody.appendChild(p);
+                            break;
+                        case "Link":
+                            let parent2 = document.createElement("div");
+                            let a2 = document.createElement("a");
+                            if (blocks[index].data.meta.description) {
+                                let desc = document.createElement("p");
+                                desc.textContent = blocks[index].data.meta.description;
+                                parent2.appendChild(desc);
+                            }
+
+                            if (blocks[index].data.meta.title) {
+                                let title = document.createElement("h3");
+                                title.textContent = blocks.createElement("h3");
+                                title.textContent = blocks[index].data.meta.title;
+                                parent2.appendChild(title);
+                            }
+                            if (blocks[index].data.meta.image.url !== "") {
+                                let img = document.createElement("img");
+                                img.src = blocks[index].data.meta.image.url;
+                                parent2.appendChild(parent2);
+                            }
+
+                            a2.href = blocks[index].data.link;
+                            parent.appendChild(a2);
+                            postBody.appendChild(parent2);
+                            break;
+                        default:
+                            break;
+                        
+                    }
+                }
+            })
+        </script>
+    </body>
+
+
+
+{% endblock %}

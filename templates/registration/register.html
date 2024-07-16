@@ -1,0 +1,94 @@
+{% extends 'blog/index.html' %}
+
+{% load static %}
+
+{% block title %}Create User{% endblock %}
+
+{% block content %}
+
+    <body class="authpage">
+        {% if messages %}
+            {% for message in messages %}
+                <div id="toast" class="d-none" data-message-tag={{message.tags}}>{{message}}</div>
+            {% endfor %}
+        {% endif %}
+        
+        <div class="authImage">
+            <div class="overlay"></div>
+            <img src="{% static 'images/books.jpg' %}" class = "img-fluid" alt="books">
+        </div>
+        <div class="authform mt-3">
+            <div class="text-center mb-4">
+                <img src="{% static 'images/Divvy logo dark.png' %}" class = "img-logo" alt="logo">
+                <h5>Sign up for Divvy</h5>
+                <p>We're glad you decided to join us!</p>
+            </div>
+
+            {% if error %}
+                <p>{{ error }}</p>
+            {% endif %}
+
+            <div class="social-signup">
+                <p>Sign up with</p>
+                <div class="social-signup-oauth d-flex justify-content-between align-items-center" style="gap: 1rem;">
+                    <div class="apple-signup top">
+                        <i class="fa-brands fa-apple" style="color: #000000; font-size: 1.2rem;"></i>
+                    </div>
+
+                    <div class="google-signup top">
+                        <i class="fa-brands fa-google icon-google"></i>
+                    </div>
+                </div>
+                <div class="divider">
+                    <span class="line"></span><p>OR</p><span class="line"></span>
+                </div>
+                <div class="form-signup top">
+                    <div class="d-flex align-items-center justify-content-center" style="gap: 1rem; font-size: 0.95rem;">
+                        <p>Sign up with Form</p>
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </div>
+                </div>
+            </div>
+
+            {% comment %} <form  method="post" autocomplete="off" name="form">
+                {% csrf_token %}
+
+                <div class="row">
+                    <div class="mb-3 col-md-6">
+                        <label for="id_first_name" class="form-label">Firstname</label>
+                        {{ form.first_name}}
+                    </div>
+                    <div class="mb-3 col-md-6">
+                        <label for="id_last_name" class="form-label">Lastname</label>
+                        {{ form.last_name}}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="id_username" class="form-label">Username</label>
+                    {{ form.username}}
+                    <span class="helptext" id="id_username_helptext">Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.</span>
+                </div>
+                <div class="mb-3">
+                    <label for="id_email" class="form-label">Email</label>
+                    {{ form.email}}
+                </div>
+                <div class="mb-3">
+                    <label for="id_password1" class="form-label">Password</label>
+                    {{ form.password1}}
+                </div>
+                <div class="mb-3">
+                    <label for="id_password2" class="form-label">Confirm Password</label>
+                    {{ form.password2}}
+                    <span class="helptext" id="password2">Enter the same password as before, for verification.</span>
+                </div>
+                
+                <button type="submit" class="btn btn-primary w-100 p-2">Create account</button>
+
+                <div class="text-center">
+                    <p>Already have an account <a href="{% url 'login' %}"> Login </a></p>
+                </div>
+            </form> {% endcomment %}
+        </div>
+    </body>
+
+{% endblock %}

@@ -1,0 +1,83 @@
+{% load static %}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid px-5 py-2">
+    <a class="navbar-brand brand d-flex align-items-center justify-content-center" href="{% url 'home' %}">
+        <img src="{% static 'images/Divvy logo dark.png' %}" alt="logo" class="logo"/>
+        <h5 class="mb-0">Divvy</h5>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto align-items-center">
+            <li class="nav-item ms-2">
+                <button id="themeBtn">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="{% url 'home' %}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'blogcreate' %}">Write</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Developer</a>
+            </li>
+
+            
+
+            {% if user.is_authenticated %}
+                <li class="nav-item dropdown ms-3">
+                    <div class="dropdown-toggle userprofile" id="navbarDropdown" data-bs-toggle="dropdown" alt="no picture" aria-expanded="false" role="button">
+                        <p>{{user.get_username.0}}</p>
+                    </div>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li class="border-bottom mb-2 pb-2">
+                            <div class="dropdown-item d-flex align-items-center justify-content-start gap-3">
+                                <div class="userprofile">
+                                    <p>{{user.get_username.0}}</p>
+                                </div>
+                                <div>
+                                    <p class="m-0">
+                                        {% if not user.first_name and user.last_name%}
+                                            Welcome user
+                                        {% else %}
+                                            {{user.first_name}} {{user.last_name}}
+                                        {% endif %}
+                                    </p>
+                                    <p class="m-0 greyed">@{{user.get_username}}</p>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="mb-2">
+                            <a class="dropdown-item" href="#">
+                                <i class="fa-regular fa-user me-1"></i>
+                                My Profile
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a class="dropdown-item" href="#">
+                                <i class="fa-regular fa-bookmark me-1"></i>
+                                Bookmarks
+                            </a>
+                        </li>
+                        <li class="mb-2">
+                            <a class="dropdown-item text-danger" href="{% url 'logout' %}">
+                                <i class="fa-solid fa-arrow-right-from-bracket me-1"></i>
+                                Logout
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+            {% else %}
+                <a class="btn btn-dark nav-btn ms-3" href="{% url 'login' %}">Get Started</a>
+            {% endif %}
+        </ul>
+    </div>
+    </div>
+</nav>

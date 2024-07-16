@@ -1,0 +1,19 @@
+<!-- delta_to_html_template.html -->
+
+{% for op in ops %}
+    {% if op.insert %}
+        {% if op.attributes %}
+            {% if op.attributes.bold %}
+                <strong>{{ op.insert }}</strong>
+            {% elif op.attributes.italic %}
+                <em>{{ op.insert }}</em>
+            {% else %}
+                {{ op.insert }}
+            {% endif %}
+        {% else %}
+            {{ op.insert }}
+        {% endif %}
+    {% elif op.delete %}
+        <del>{{ op.delete }}</del>
+    {% endif %}
+{% endfor %}

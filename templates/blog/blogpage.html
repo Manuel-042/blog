@@ -1,0 +1,20 @@
+{% extends "blog/index.html" %}
+
+{% block title %}BlogPage{% endblock %}
+
+{% block content %}
+    <div>
+        <div class="d-flex align-items-center justify-content-center hero-section">
+            <div class="hero-div">
+                <h1 class="text-center hero-heading">Unfiltered: <br> Real People, Real Stories</h1>
+
+                <a class="btn btn-primary hero-btn py-2" href={% if user.is_authenticated%} "{% url 'bloglist' %}" {% else %} "{% url 'login'%}" {% endif %}>Start Reading</a>
+            </div>
+
+            {% comment %} Hi {{ user.get_username }}!  {% endcomment %}
+        </div>
+    </div>
+
+    {{ redirect_to_login_immediately }} <!-- django redirect -->
+
+{% endblock %}

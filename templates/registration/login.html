@@ -1,0 +1,73 @@
+{% extends 'blog/index.html' %}
+
+{% load static %}
+
+{% block title%}Login{% endblock %}
+
+{% block content %}
+    <div class="authpage">
+        {% if messages %}
+            {% for message in messages %}
+                <div id="toast" class="d-none" data-message-tag={{message.tags}}>{{message}}</div>
+            {% endfor %}
+        {% endif %}
+        <div class="authImage">
+            <div class="overlay"></div>
+            <img src="{% static 'images/books.jpg' %}" class = "img-fluid" alt="books">
+        </div>
+        <div class="authform" >
+            <div class="text-center mb-4">
+                <img src="{% static 'images/Divvy logo dark.png' %}" class = "img-logo" alt="logo">
+                <h5>Welcome back</h5>
+                <p>Please enter your details to sign in</p>
+            </div>
+
+            <div class="social-login">
+                <div class="apple">
+                    <i class="fa-brands fa-apple fa-xl" style="color: #000000;"></i>
+                </div>
+                <div class="google">
+                    <i class="fa-brands fa-google icon-google"></i>
+                </div>
+            </div>
+
+            <div class="divider">
+                <span class="line"></span><p>OR</p><span class="line"></span>
+            </div>
+
+            {% if error %}
+                <p>{{ error }}</p>
+            {% endif %}
+
+            <form  method="post" autocomplete="off" name="form">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label for="username" class="form-label">Username</label>
+                    {{ form.username}}
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label">Password</label>
+                    {{ form.password}}
+                </div>
+                <div class="form-actions d-flex justify-content-between">
+                    <div class="mb-3 form-check">
+                        {{ form.remember_me}}
+                        <label class="form-check-label" for="remember_me">Remember me</label>
+                    </div>
+                    
+                    <a href="{% url 'password_reset' %}">Forget Password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 p-2 mt-2">Login</button>
+
+                <br>
+                <br>
+
+                <div class="text-center">
+                    <p>Don't have an account? <a href="{% url 'register' %}"> Register </a></p>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
